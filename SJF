@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<string.h>
+
+int main()
+{
+    int i=0,processNumber[10],burstTime[10],waitTime[10],turnaroundTime[10],n,j,temp=0;
+    float avgWaitTime,avgTat;
+    printf("Enter the number of processes: ");
+    scanf("%d",&n);
+    printf("Enter the burst time of each process: \n");
+    for(i=0;i<n;i++)
+    {
+        printf("p%d: ",i);
+        scanf("%d",&burstTime[i]);
+        processNumber[i]=i;
+    }
+    for(i=0;i<n-1;i++)
+    {
+        for(j=i+1;j<n;j++)
+        {
+            if(burstTime[i]>burstTime[j])
+            {
+                temp=burstTime[i];
+                burstTime[i]=burstTime[j];
+                burstTime[j]=temp;
+                temp=processNumber[i];
+                processNumber[i]=processNumber[j];
+                processNumber[j]=temp;
+            }
+        }
+    }
+    waitTime[0]=0;
+    int totalWt=0,totalTat=0;
+
+    for(i=1;i<n;i++)
+    {
+        waitTime[i]=burstTime[i-1]+waitTime[i-1];
+        totalWt+=waitTime[i];
+    }
+    printf("\n Process no.\t Burst time\t Waiting time\t Turn around time\n");
+    for(i=0;i<n;i++)
+    {
+        turnaroundTime[i]=burstTime[i]+waitTime[i];
+        totalTat+=turnaroundTime[i];
+
+        printf("\n p%d\t\t%d\t\t%d\t\t%d",processNumber[i],burstTime[i],waitTime[i],turnaroundTime[i]);
+    }
+    avgWaitTime=(float)totalWt/n;
+    avgTat=(float)totalTat/n;
+    printf("\n Average waiting time: %0.2f \n Average turn around time:%0.2f",avgWaitTime,avgTat);
+}
